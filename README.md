@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TastyBites Restaurant Website
 
 A modern, responsive restaurant website built with React.js, featuring online ordering, reservations, and a beautiful user interface.
@@ -216,3 +217,6 @@ For support, email info@tastybites.com or create an issue in the repository.
 ---
 
 **Built with ❤️ for TastyBites Restaurant**
+=======
+# Restaurant-Website-TastyBites-
+>>>>>>> bda19263f6857dab05902fb05d3de5c456c701b0
