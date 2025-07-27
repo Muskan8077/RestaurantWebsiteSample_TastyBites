@@ -2,6 +2,87 @@ import React, { useState } from 'react';
 import { useRestaurant } from '../context/RestaurantContext';
 import DishCard from '../components/DishCard';
 
+const MobileFilterModal = ({ open, onClose, filters, updateFilters, categories, priceRanges, dietaryOptions, sortOptions }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 animate-fade-in">
+      <div className="bg-white w-full max-w-md mx-auto rounded-lg shadow-lg p-6 relative overflow-y-auto max-h-[90vh]">
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-primary-600 text-2xl font-bold focus:outline-none"
+          onClick={onClose}
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <h3 className="text-xl font-bold mb-4 text-center">Filter & Sort</h3>
+        {/* Category Filter */}
+        <div className="mb-4">
+          <h4 className="font-medium mb-2">Category</h4>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => updateFilters({ category })}
+                className={`px-3 py-1 rounded-full border ${filters.category === category ? 'bg-primary-600 text-white border-primary-600' : 'bg-gray-100 text-gray-700 border-gray-300'}`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* Price Range Filter */}
+        <div className="mb-4">
+          <h4 className="font-medium mb-2">Price Range</h4>
+          <select
+            value={filters.priceRange}
+            onChange={e => updateFilters({ priceRange: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+          >
+            {priceRanges.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+        {/* Dietary Filter */}
+        <div className="mb-4">
+          <h4 className="font-medium mb-2">Dietary</h4>
+          <select
+            value={filters.dietary}
+            onChange={e => updateFilters({ dietary: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+          >
+            {dietaryOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+        {/* Sort Options */}
+        <div className="mb-4">
+          <h4 className="font-medium mb-2">Sort By</h4>
+          <select
+            value={filters.sortBy}
+            onChange={e => updateFilters({ sortBy: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded-md text-sm"
+          >
+            {sortOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+        <button
+          onClick={() => {
+            updateFilters({ category: 'All', priceRange: 'All', dietary: 'All', sortBy: 'name' });
+            onClose();
+          }}
+          className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 mt-2"
+        >
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Menu = () => {
   const { 
     getFilteredMenu, 
@@ -14,6 +95,7 @@ const Menu = () => {
   } = useRestaurant();
   
   const [showCart, setShowCart] = useState(false);
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
   const filteredDishes = getFilteredMenu();
 
   const categories = ['All', 'Starter', 'Main', 'Dessert'];
@@ -57,13 +139,33 @@ const Menu = () => {
         </div>
       </div>
 
+      {/* Mobile Filter Button */}
+      <div className="block md:hidden container mx-auto px-6 mt-4 mb-2">
+        <button
+          className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2 text-lg shadow-md"
+          onClick={() => setShowMobileFilter(true)}
+        >
+          <span className="material-symbols-outlined text-xl">tune</span>
+          Filter & Sort
+        </button>
+      </div>
+      <MobileFilterModal
+        open={showMobileFilter}
+        onClose={() => setShowMobileFilter(false)}
+        filters={filters}
+        updateFilters={updateFilters}
+        categories={categories}
+        priceRanges={priceRanges}
+        dietaryOptions={dietaryOptions}
+        sortOptions={sortOptions}
+      />
+
       <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+        <div className="flex flex-col gap-8 md:grid md:grid-cols-4 md:gap-8">
+          {/* Filters Sidebar (hidden on mobile) */}
+          <div className="hidden md:block md:col-span-1 mb-4 md:mb-0">
             <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
               <h3 className="text-lg font-semibold mb-4">Filters</h3>
-              
               {/* Category Filter */}
               <div className="mb-6">
                 <h4 className="font-medium mb-3">Category</h4>
@@ -148,9 +250,9 @@ const Menu = () => {
           </div>
 
           {/* Menu Items */}
-          <div className="lg:col-span-3">
+          <div className="md:col-span-3">
             {/* Results Count */}
-            <div className="mb-6 flex justify-between items-center">
+            <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
               <p className="text-gray-600">
                 Showing {filteredDishes.length} of {filteredDishes.length} items
               </p>
@@ -164,7 +266,7 @@ const Menu = () => {
             </div>
 
             {/* Menu Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredDishes.map((dish) => (
                 <DishCard 
                   key={dish.id} 

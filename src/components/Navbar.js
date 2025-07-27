@@ -8,21 +8,21 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 w-full bg-white shadow-lg z-50 border-b border-gray-200">
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex justify-between items-center">
+      <div className="container mx-auto px-2 sm:px-4 py-3">
+        <div className="flex justify-between items-center min-h-[56px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-primary-500 rounded-full flex items-center justify-center">
+          <Link to="/" className="flex items-center space-x-2 min-w-0">
+            <div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-lg">T</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-800 font-serif flex items-center gap-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 font-serif flex items-center gap-1 truncate">
               <span className="material-symbols-outlined align-middle text-gray-800 text-2xl" style={{fontVariationSettings: '"FILL" 1, "wght" 700', verticalAlign: 'middle', marginRight: '0.25rem'}}>restaurant</span>
               TastyBites
             </h1>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
             <Link to="/" className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200">
               Home
             </Link>
@@ -38,7 +38,7 @@ const Navbar = () => {
           </div>
 
           {/* Cart Icon */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <Link to="/menu" className="relative">
               <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-white text-lg">shopping_cart</span>
@@ -52,8 +52,9 @@ const Navbar = () => {
 
             {/* Mobile menu button */}
             <button
-              className="md:hidden p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100"
+              className="md:hidden p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100 focus:outline-none"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
             >
               <span className="material-symbols-outlined text-xl">
                 {isMenuOpen ? 'close' : 'menu'}
@@ -64,8 +65,8 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
-            <div className="flex flex-col space-y-3 pt-4">
+          <div className="md:hidden mt-2 pb-4 border-t border-gray-200 bg-white w-full absolute left-0 top-full z-40 shadow-lg animate-fade-in">
+            <div className="flex flex-col space-y-3 pt-4 px-4">
               <Link 
                 to="/" 
                 className="text-gray-700 hover:text-primary-600 font-medium transition-colors duration-200"
